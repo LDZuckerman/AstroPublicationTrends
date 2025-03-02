@@ -1,0 +1,75 @@
+---
+title: "ARM"
+output: html_notebook
+---
+
+Notebook to perform association rule mining on ADS dataset
+```{r}
+# Re-install packages 
+remove.packages("rlang")
+remove.packages("dplyr")
+remove.packages("vctr")
+remove.packages("cli")
+install.packages("rlang")
+install.packages("dplyr")
+install.packages("vctr")
+install.packages("cli")
+```
+
+```{r}
+# Import packages 
+library(viridis)
+library(arules)
+library(TSP)
+library(data.table)
+#library(ggplot2)
+#library(Matrix)
+library(tcltk)
+library(dplyr)
+#library(devtools)
+library(purrr)
+library(tidyr)
+library(arulesViz)
+#setwd("/mnt/c/Users/Lea/OneDrive/CSCI5612/AstroPublicationTrends")
+```
+
+```{r}
+# Load the data
+data <- read.transactions("../ads_data_trans.csv",
+                             rm.duplicates = FALSE, 
+                             format = "basket",  ##if you use "single" also use cols=c(1,2)
+                             sep=",",  ## csv file
+                             cols=NULL) ## The dataset has no row numbers
+```
+
+```{r}
+# Plot frequent items
+itemFrequencyPlot(data, topN=20, type="absolute")
+```
+
+```{r}
+# Compute rules with apriori and sort 
+rules = arules::apriori(data, parameter = list(support=.2, confidence=.8, minlen=2))
+SortedRules <- sort(rules, by="lift", decreasing=TRUE)
+inspect(SortedRules[1:15])
+```
+```{r}
+# Compute only rules regarding high citation count papers
+
+HighCCRules <- apriori(data, parameter = list(supp=.01, conf=.5, minlen=2),
+                     appearance = list(default="rhs", lhs="VeryHighCC"),
+                     control=list(verbose=FALSE))
+HighCCRules <- sort(HighCCRules, decreasing=TRUE, by="confidence")
+inspect(HighCCRules)
+
+```
+```{r}
+# Scatter plot confidence vs support
+subrules <- head(sort(SortedRules, by="lift"),10)
+plot(subrules)
+```
+
+
+
+
+
