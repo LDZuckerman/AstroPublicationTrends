@@ -65,10 +65,13 @@ inspect(HighCCRules)
 ```
 ```{r}
 # Scatter plot confidence vs support
-subrules <- head(sort(SortedRules, by="lift"),10)
+subrules <- head(sort(SortedRules, by="lift"),15)
 plot(subrules)
 ```
-
+```{r}
+# Plot 0
+plot(subrules, method="graph", engine="htmlwidget")
+```
 
 
 
