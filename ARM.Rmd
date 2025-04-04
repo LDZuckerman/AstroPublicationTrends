@@ -50,7 +50,7 @@ itemFrequencyPlot(data, topN=20, type="absolute")
 ```{r}
 # Compute rules with apriori and sort 
 rules = arules::apriori(data, parameter = list(support=.2, confidence=.8, minlen=2))
-SortedRules <- sort(rules, by="lift", decreasing=TRUE)
+SortedRules <- sort(rules, by="support", decreasing=TRUE)
 inspect(SortedRules[1:15])
 ```
 ```{r}
@@ -65,7 +65,7 @@ inspect(HighCCRules)
 ```
 ```{r}
 # Scatter plot confidence vs support
-subrules <- head(sort(SortedRules, by="lift"),15)
+subrules <- sort(SortedRules, by="lift") # head(sort(SortedRules, by="lift"),15)
 plot(subrules)
 ```
 ```{r}
